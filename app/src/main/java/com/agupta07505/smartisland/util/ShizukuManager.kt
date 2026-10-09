@@ -127,6 +127,7 @@ object ShizukuManager {
      * - Battery Optimization whitelist
      */
     suspend fun autoGrantAllPermissions(context: Context): Result<String> = withContext(Dispatchers.IO) {
+        if (SystemGrant.isAvailable(context)) return@withContext SystemGrant.grantAll(context)
         val pkg = context.packageName
         val accessibilityClass = "$pkg/${SmartIslandOverlayService::class.java.name}"
         val notificationClass = "$pkg/${SmartIslandNotificationListenerService::class.java.name}"
@@ -156,6 +157,7 @@ object ShizukuManager {
      * Grants OEM Autostart and disables background kill / app standby restrictions via Shizuku.
      */
     suspend fun grantOemAutostartAndKillProtection(context: Context): Result<String> = withContext(Dispatchers.IO) {
+        if (SystemGrant.isAvailable(context)) return@withContext Result.success("Handled by system config")
         val pkg = context.packageName
         val commands = listOf(
             "appops set $pkg AUTO_START allow",
@@ -171,6 +173,7 @@ object ShizukuManager {
      * Grants Notification Listener permission via Shizuku without overwriting other active listeners.
      */
     suspend fun grantNotificationListener(context: Context): Result<String> = withContext(Dispatchers.IO) {
+        if (SystemGrant.isAvailable(context)) return@withContext SystemGrant.grantAll(context)
         val pkg = context.packageName
         val notificationClass = "$pkg/${SmartIslandNotificationListenerService::class.java.name}"
         val mergedNotificationListeners = getMergedNotificationListeners(context, notificationClass)
@@ -186,6 +189,7 @@ object ShizukuManager {
      * Grants Accessibility service permission via Shizuku without overwriting other active accessibility services.
      */
     suspend fun grantAccessibility(context: Context): Result<String> = withContext(Dispatchers.IO) {
+        if (SystemGrant.isAvailable(context)) return@withContext SystemGrant.grantAll(context)
         val pkg = context.packageName
         val accessibilityClass = "$pkg/${SmartIslandOverlayService::class.java.name}"
         val mergedAccessibilityServices = getMergedAccessibilityServices(context, accessibilityClass)

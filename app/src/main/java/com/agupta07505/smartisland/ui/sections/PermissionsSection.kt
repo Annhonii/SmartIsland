@@ -61,6 +61,7 @@ import com.agupta07505.smartisland.R
 import com.agupta07505.smartisland.ui.PermissionCard
 import com.agupta07505.smartisland.util.OemAutostartUtil
 import com.agupta07505.smartisland.util.ShizukuManager
+import com.agupta07505.smartisland.util.SystemGrant
 import com.agupta07505.smartisland.util.safeStartActivity
 import kotlinx.coroutines.launch
 
@@ -84,6 +85,7 @@ fun PermissionsSection(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
+        if (!SystemGrant.isAvailable(context)) {
         // Shizuku 1-Tap Auto Setup Card
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -195,6 +197,7 @@ fun PermissionsSection(
                     lineHeight = 16.sp
                 )
             }
+        }
         }
 
         // Required Permission 1: Accessibility

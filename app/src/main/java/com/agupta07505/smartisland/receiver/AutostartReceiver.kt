@@ -12,6 +12,7 @@ import android.content.Context
 import android.content.Intent
 import com.agupta07505.smartisland.data.SmartIslandSettingsRepository
 import com.agupta07505.smartisland.util.ShizukuManager
+import com.agupta07505.smartisland.util.SystemGrant
 import com.agupta07505.smartisland.util.runCatchingLogged
 import com.agupta07505.smartisland.util.runSuspendCatchingLogged
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +44,9 @@ class AutostartReceiver : BroadcastReceiver() {
                         "Failed handling autostart broadcast"
                     ) {
                         val settings = settingsRepository.settings.first()
-                        if (settings.enabled && ShizukuManager.hasPermission()) {
+                        if (SystemGrant.isAvailable(context) ||
+                            (settings.enabled && ShizukuManager.hasPermission())
+                        ) {
                             ShizukuManager.autoGrantAllPermissions(context)
                         }
                     }
